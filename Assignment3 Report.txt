@@ -1,0 +1,50 @@
+1:
+<program> --> begin <statement list> end
+<statement list> --> <statement> ; <statement list>
+<statement list> --> <statement>
+<statement> --> <id> := <expression>
+<statement> --> if(<boolean expression>){statement}
+<boolean expression> --> <id>=<id>
+<boolean expression> --> <id>!=<id>
+<expression> --> <id> + <id>
+<expression> --> <id>
+
+2:
+replace
+
+<statement> --> if(<boolean expression>){statement}
+
+with 
+<statement> --> if(<boolean expression>)<basic statement>
+<basic statement> --> {<id> := <expression>}
+
+To make it LL(1)
+
+3:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4 see code
+
+5. See code
+
+6. see code
+
+7 see code
