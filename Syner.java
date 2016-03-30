@@ -83,27 +83,39 @@ public class Syner {
 				}
 				else
 				{
+					//How to skip statement???
+				}
+					lex.getNextToken();
+					 if (lex.token==lex.CLOSECURL)
+					 {
+						 return;
+					 }
+				}
+				
+					
 					int openMinusClosedCurl=1;
+					/*
 					while (openMinusClosedCurl!=0)
 					{
-						if (lex.token== lex.CLOSECURL)
+						if (lex.token== lex.OPENCURL)
 						{
 							System.out.println("{");
 							openMinusClosedCurl++;
 						}
-						else if (lex.token=='}')
+						else if (lex.token==lex.CLOSECURL)
 						{
 							openMinusClosedCurl--;
 							System.out.println("}");
 						}
 						lex.getNextToken();
 					}
+					*/
 				}
 		       	
 			}
 			
-		}
-	}
+	
+
 	
 	public int parseExpression() throws IOException {
 		if(lex.token == lex.IDENT) {
