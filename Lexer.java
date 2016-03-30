@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Lexer {
+	int counter=0;
 	public final int BEGIN = 1;
 	public final int END = 2;
 	public final int ASSIGN = 3;
@@ -37,11 +38,14 @@ public class Lexer {
 	}
 
 	public void getNextToken()throws IOException {
+	
 		if (endOfFile){token = EOF; return;} 
 		String terminalString ="";
 		try {
-
+			disposeSpace();
+ //System.out.println("c="+c);
 			 if(Character.isLetter(c)){ //first character is a letter, get whole alphanumeric string
+				
 				 terminalString += c;
 					nextChar();
 					while(Character.isLetterOrDigit(c)){terminalString += c; nextChar();}
@@ -61,45 +65,52 @@ public class Lexer {
 						else {System.out.println("lexical error: '=' expected after ':'; skip to end of program");
 						       skipToEndOfFile();}
 			}       
-			else if (c=='(') {token = CLOSECURL; nextChar();} 
-			else if (c==')') {token = OPENCURL; nextChar();} 
-			else if (c=='{')
+			else if (c=='{') {token = CLOSECURL; nextChar();} 
+			else if (c=='}') {token = OPENCURL; nextChar();} 
+			else if (c=='(')
 			{
 				
-				disposeSpace();
+				
 				nextChar();
+				disposeSpace();
 				appendNextID("");
 				boolVal1=terminalString;
-				disposeSpace();
+
 				nextChar();
+				disposeSpace();
 				if (c=='=')
 				{
 					equals=true;
 				
-					disposeSpace();
+					
 					nextChar();
+					disposeSpace();
 					appendNextID("");
 					boolVal2=terminalString;
-					disposeSpace();
+					
 					nextChar();
-					if (c=='}')
+					disposeSpace();
+					if (c==')')
 						{
 						token=BOOLEAN;
 						}
 				}
 				else if (c=='!')
 				{
-					disposeSpace();
+					
 					nextChar();
+					disposeSpace();
 						if (c=='=')
 						{ equals=false;
-						disposeSpace();
+						
 						nextChar();
+						disposeSpace();
 						appendNextID("");
 						boolVal2=terminalString;
-						disposeSpace();
+						
 						nextChar();
-						if (c=='}')
+						disposeSpace();
+						if (c==')')
 							{
 							token=BOOLEAN;
 							}
@@ -113,6 +124,8 @@ public class Lexer {
 			endOfFile = true;
 			token = (terminalString == "")? EOF : checkKeywords(terminalString);
 			}
+		System.out.println("token= "+token +" idName"+idName);
+		
 		}
 	void appendNextID(String terminalString)throws IOException{
 
@@ -127,23 +140,29 @@ public class Lexer {
 			token = (terminalString == "")? EOF : checkKeywords(terminalString);
 		}
 	}
-	int checkKeywords(String s) {
+	int checkKeywords(String s){
+		//System.out.println("s="+s);
 		if(s.equals("BEGIN")) return(BEGIN);
 		else if(s.equals("END")) return(END);
-		else if(s.equals("IF")) return(IF);
+		else if(s.equals("IF")|| s.equals("if")) return(IF);
 		else return(IDENT);
 		}
 	
 	 void disposeSpace() throws IOException, EndOfFileEncountered{
 		//get rid of all spaces like \t, \n, and blank space
-		while(Character.isWhitespace(c)) {nextChar();}
+		while(Character.isWhitespace(c)) 
+		{nextChar();
+		counter++;
+		}
+		System.out.println("whitespaces"+counter);
+		counter=0;
 		}
 
 	 void nextChar() throws IOException, EndOfFileEncountered{//get next character
 		int i;
 		if ((i = input.read()) == -1)throw new EndOfFileEncountered();
 		c = (char) i;
-		System.out.print(c);
+		//System.out.print(c);
 		}
 	
 	 void skipToEndOfFile() throws IOException, EndOfFileEncountered {

@@ -24,9 +24,12 @@ public class Syner {
 	}
 
 	public void parseProgram() throws IOException {
+		System.out.println("program"+lex.token);
 		if(lex.token == lex.BEGIN){
+
 			while (true){
 				lex.getNextToken();
+				System.out.println("hellog"+lex.token);
 				parseStatement();
 				if(lex.token != lex.SEMICOLON){
 					break;
@@ -41,19 +44,26 @@ public class Syner {
 	}
 	
 	public void parseStatement() throws IOException {
+		System.out.println("parse: "+lex.token);
 		if (lex.token == lex.IDENT) {
 			String var = lex.idName;
 			lex.getNextToken(); 
+
 			if (lex.token == lex.ASSIGN) {
 				lex.getNextToken(); 
 				int v = parseExpression();
 				symbolTable.put(var, new Integer(v) );
-				System.out.println("\n"+var+" assign "+v);
+				
 			} else {
 				errorMessage("assignment symbol expected");
 			}
-		} else {
-			errorMessage("identifier expected at the begining of a statement");
+		}
+		else if (lex.token == lex.IF)
+		{
+			parseIf();
+		}
+		else {
+			errorMessage("identifier or if expected at the begining of a statement");
 		}
 	}
 	public void parseIf() throws IOException {
@@ -64,7 +74,7 @@ public class Syner {
 			
 		
 		boolean test= parseBoolean();
-
+		lex.getNextToken();
 			if(lex.token == lex.OPENCURL)
 			{
 				if (test)
@@ -76,13 +86,15 @@ public class Syner {
 					int openMinusClosedCurl=1;
 					while (openMinusClosedCurl!=0)
 					{
-						if (lex.token=='(')
+						if (lex.token== lex.CLOSECURL)
 						{
+							System.out.println("{");
 							openMinusClosedCurl++;
 						}
-						else if (lex.token==')')
+						else if (lex.token=='}')
 						{
 							openMinusClosedCurl--;
+							System.out.println("}");
 						}
 						lex.getNextToken();
 					}
